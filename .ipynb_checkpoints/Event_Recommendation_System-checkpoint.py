@@ -1,11 +1,12 @@
+# Event_Recommendation_System.ipynb
+
 import pandas as pd
 from surprise import SVD, Dataset, Reader
 from surprise.model_selection import train_test_split
 from surprise import accuracy
-from collections import defaultdict
 
 # 1. Charger les données
-df = pd.read_csv(r"C:\Users\nadin_pbj\Data-Science-Basics\data\event_data.csv")
+df = pd.read_csv('../data/event_data.csv')
 
 # 2. Créer un Reader et charger dans Surprise
 reader = Reader(rating_scale=(0, 1))
@@ -25,6 +26,7 @@ print("RMSE:", rmse)
 
 # 6. Recommander des événements pour un utilisateur
 def get_top_n(predictions, n=5):
+    from collections import defaultdict
     top_n = defaultdict(list)
     for uid, iid, true_r, est, _ in predictions:
         top_n[uid].append((iid, est))
@@ -35,11 +37,6 @@ def get_top_n(predictions, n=5):
 
 top_n = get_top_n(predictions, n=5)
 
-# Vérifier si l'utilisateur 42 est dans les recommandations
-user_id = 42
-if user_id in top_n:
-    print(f"Top 5 événements recommandés pour l'utilisateur {user_id}:")
-    for event_id, score in top_n[user_id]:
-        print(f"Événement ID: {event_id}, Score: {score}")
-else:
-    print(f"L'utilisateur {user_id} n'a pas de recommandations disponibles dans l'ensemble de test.")
+# Afficher les recommandations pour un utilisateur exemple
+print("Top 5 événements recommandés pour l'utilisateur 42:")
+print(top_n.get('42', 'Utilisateur non trouvé'))
